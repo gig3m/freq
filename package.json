@@ -1,0 +1,21 @@
+{
+  "name": "freq",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node test"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tape": "^2.14.0"
+  },
+  "dependencies": {
+    "lodash": "^2.4.1",
+    "lowdb": "^0.3.1"
+  }
+}
