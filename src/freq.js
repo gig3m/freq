@@ -1,77 +1,56 @@
 'use strict'
 
-var fs = require('fs');
 var _ = require('lodash');
-var low = require('lowdb')
+var async = require('async');
+var Chance = require('chance');
+var chance = new Chance();
+var redis = require("redis");
+var client = redis.createClient();
+var multi = client.multi();
 
+// build a nice 10 digit hash
+var hash = chance.hash({length: 10});
+
+// hard coded to know what I wanted to know, take input later
 var source = require('../input/sscoc-export.json');
+// var source = require('../input/single.json');
 
-var counts = [];
-var total = source.data.length;
-var i = 0;
-// console.log(source);
+console.log('Total articles to process:', source.data.length);
+console.log('Beginning string operations...');
 
-_(source.data).forEach(function (data) {
-	i++;
-	try {
+async.each(source.data, function(data, callback) {
 
-		var string = data.body.toString();
-		countWords(string);
-		
+	var total;
+	var i = 0;
+	var string = data.body.toString();
+	var words = string
+		.replace(/[.,?!;:()“”"'\-0123456789]/g, " ")
+		.replace(/[\u2026]/g, " ") //ellipsis
+		.replace(/\s+/g, " ")
+		.toLowerCase()
+		.split(" ");
 
-		// _(local).forEach(function (v,k) {
-		// 	counts[v] = (counts[v]||0)+1;
-		// 	console.log('Setting '+counts[v]+' equal to '+(counts[k]||0)+1);
-		// })
+	total = words.length;
+	_(words).forEach(function (w) {
+		i++;
+		multi.hsetnx(hash, w, 0);
+		multi.hincrby(hash, w, 1);
+		if (i === total) { callback(); } // all words processed
+	});
 
-
-
-		if (i === total) {
-			finished();
-		}
-
-	} catch(err) {
-		console.log(err);
+}, function(err){
+	if( err ) {
+	  console.log('A file failed to process, exiting.');
+	  process.exit();
+	} else {
+		console.log('String operations complete.');		
+		console.log('Processing Redis queue...');
+		multi.exec(function (err, replies) {
+			client.quit();
+			console.log(replies.length + ' queries handled.')
+			console.log('All input has been processed successfully.');
+			console.log('Stored in hash:', hash)
+	  		process.exit();
+		});
 	}
 });
-
-function countWords(string) {
-	var words = string
-					.replace(/[.,?!;()"'-]/g, " ")
-					.replace(/\s+/g, " ")
-					.toLowerCase()
-					.split(" ");
-
-	_(words).forEach(function (w) {
-		if (w === 'the') {
-		var present = low('words').where({ word: 'the' }).value()
-		console.log(present);			
-		}
-		// var present = low('words').where({ word: w }).value()
-		// console.log(present);
-		// if (present) {
-		// 	low('words').update(present.id, {word: w, n: (present.n)+1});
-		// 	console.log(w, (present.n)+1);			
-		// }else{
-		// 	low('words').insert({word: w, n: 1});
-		// 	console.log(w, 1);	
-		// }
-	})
-
-
-    // words.forEach(function (word) {
-    //     if (!(counts.hasOwnProperty(word))) {
-    //         counts[word] = 0;
-    //     }
-    //     counts[word]++;
-    // });
-}
-
-function finished() {
-	console.log(counts);
-	// _.first(counts, function (v, k) {
-	// 	console.log(k, v);
-	// });
-}
-
-
