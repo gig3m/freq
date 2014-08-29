@@ -3,8 +3,10 @@
 var _ = require('lodash');
 var async = require('async');
 
-module.exports = function(strings) {
+module.exports = function(input) {
+	var strings = [];
 	var dictionary = [];
+	Array.isArray(input) ? strings = input : strings.push(input.toString());
 	async.each(strings, function(string, callback) {
 		var total;
 		var i = 0;
