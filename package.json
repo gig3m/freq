@@ -1,7 +1,7 @@
 {
   "name": "freq",
-  "version": "0.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "A small function to return word frequency from an array of strings.",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -9,15 +9,27 @@
   "scripts": {
     "test": "node test"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Kyle Arrington",
+  "license": "MIT",
   "devDependencies": {
     "tape": "^2.14.0"
   },
   "dependencies": {
     "async": "^0.9.0",
-    "chance": "^0.5.9",
-    "lodash": "^2.4.1",
-    "redis": "^0.12.1"
-  }
+    "lodash": "^2.4.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gig3m/freq.git"
+  },
+  "keywords": [
+    "string",
+    "words",
+    "frequency",
+    "count"
+  ],
+  "bugs": {
+    "url": "https://github.com/gig3m/freq/issues"
+  },
+  "homepage": "https://github.com/gig3m/freq"
 }
