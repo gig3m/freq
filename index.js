@@ -37,6 +37,14 @@ module.exports = function(input) {
 		  console.log('An error occured, exiting.');
 		  process.exit();
 		} else {
+			// remove blank entry from array
+			var evens = _.remove(dictionary, function(e) {
+				if (e.word === '') {
+					return true;
+				}else{
+					return false;
+				}			
+			});
 			//process order of dictionary
 			dictionary = _.sortBy(dictionary, function(e) {
 				return e.count*-1;
