@@ -1,7 +1,7 @@
 {
   "name": "freq",
   "version": "0.1.2",
-  "description": "A small module to return word frequency from an array of strings.  In progress.",
+  "description": "Tally word frequency from a string or an array of strings.",
   "main": "index.js",
   "directories": {
     "test": "test"
