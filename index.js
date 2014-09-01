@@ -6,6 +6,7 @@ var async = require('async');
 module.exports = function(input) {
 	var strings = [];
 	var dictionary = [];
+	// convert string input to array
 	Array.isArray(input) ? strings = input : strings.push(input.toString());
 	async.each(strings, function(string, callback) {
 		var total;
@@ -21,9 +22,8 @@ module.exports = function(input) {
 		total = words.length;
 		_(words).forEach(function (w) {
 			i++;
-			// console.log(w, _.contains(dictionary, { 'word': w }), dictionary);
-			if (_.find(dictionary, { 'word': w }) != undefined) {
-				var entry = _.find(dictionary, { 'word': w });
+			var entry = _.find(dictionary, { 'word': w });
+			if (entry != undefined) {
 				entry.count = entry.count+1;
 			}else{
 				dictionary.push({ 'word': w, 'count': 1 });
@@ -37,15 +37,15 @@ module.exports = function(input) {
 		  console.log('An error occured, exiting.');
 		  process.exit();
 		} else {
-			// remove blank entry from array
-			var evens = _.remove(dictionary, function(e) {
+			// remove possible blank entry from array
+			_.remove(dictionary, function(e) {
 				if (e.word === '') {
 					return true;
 				}else{
 					return false;
 				}			
 			});
-			//process order of dictionary
+			// reorder dictionary by count
 			dictionary = _.sortBy(dictionary, function(e) {
 				return e.count*-1;
 			});
