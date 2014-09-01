@@ -1,6 +1,6 @@
 {
   "name": "freq",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Tally word frequency from a string or an array of strings.",
   "main": "index.js",
   "directories": {
